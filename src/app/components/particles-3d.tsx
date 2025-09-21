@@ -218,14 +218,28 @@ function LogoBillboard({
   position: [number, number, number];
   accent: string;
 }) {
+  // Resolve asset path to support deployments under a basePath (e.g., GitHub Pages)
+  const resolvedSrc = React.useMemo(() => {
+    const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+    if (!src) return src;
+    if (src.startsWith("http://") || src.startsWith("https://")) return src;
+    return `${base}${src.startsWith("/") ? src : "/" + src}`;
+  }, [src]);
+
   const [texture, setTexture] = React.useState<THREE.Texture | null>(null);
   const [failed, setFailed] = React.useState(false);
 
   React.useEffect(() => {
     let mounted = true;
     const loader = new THREE.TextureLoader();
+    // allow same-origin loads and potential CDN with CORS
+    // @ts-ignore - setCrossOrigin exists at runtime
+    if (typeof loader.setCrossOrigin === "function") {
+      // anonymous helps avoid tainting if served with CORS headers
+      (loader as any).setCrossOrigin("anonymous");
+    }
     loader.load(
-      src,
+      resolvedSrc,
       (tex) => {
         if (mounted) setTexture(tex);
       },
@@ -237,7 +251,7 @@ function LogoBillboard({
     return () => {
       mounted = false;
     };
-  }, [src]);
+  }, [resolvedSrc]);
 
   return (
     <Billboard position={position}>
@@ -272,17 +286,30 @@ function LogoBillboard({
           </div>
         </Html>
       ) : (
+        // While the texture is loading, show a tiny HTML img fallback.
         <Html center style={{ pointerEvents: "none" }}>
-          <img
-            src={src}
-            alt="logo"
+          <div
             style={{
               width: 48,
               height: 48,
-              objectFit: "contain",
-              filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "transparent",
             }}
-          />
+          >
+            <img
+              src={resolvedSrc}
+              alt="logo"
+              style={{
+                width: 48,
+                height: 48,
+                objectFit: "contain",
+                display: "block",
+                filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))",
+              }}
+            />
+          </div>
         </Html>
       )}
     </Billboard>

@@ -10,7 +10,7 @@ const LeetCodeSection = dynamic(
 export function LeetCodeSectionLazy({
   username,
   rootMargin = "0px 0px -10% 0px",
-  threshold = 0.01,
+  threshold = 0.1,
   placeholder,
 }: {
   username: string;
@@ -43,11 +43,7 @@ export function LeetCodeSectionLazy({
 
   return (
     <div ref={ref}>
-      {visible ? (
-        <LeetCodeSection username={username} />
-      ) : (
-        placeholder ?? <div className="py-12 md:py-16" />
-      )}
+      {visible ? <LeetCodeSection username={username} /> : placeholder ?? null}
     </div>
   );
 }
