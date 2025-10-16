@@ -118,7 +118,12 @@ export function HoloAvatar({ className }: { className?: string }) {
 
   if (!mounted) {
     return (
-      <div className={cn("relative flex items-center justify-center bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-3xl", className)}>
+      <div
+        className={cn(
+          "relative flex items-center justify-center bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-3xl",
+          className
+        )}
+      >
         <div className="text-cyan-300/50 text-sm">Loading...</div>
       </div>
     );
@@ -126,7 +131,12 @@ export function HoloAvatar({ className }: { className?: string }) {
 
   if (webglError) {
     return (
-      <div className={cn("relative flex items-center justify-center bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-3xl", className)}>
+      <div
+        className={cn(
+          "relative flex items-center justify-center bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-3xl",
+          className
+        )}
+      >
         <div className="text-cyan-300 text-center p-8">
           <div className="text-6xl mb-2">⚡</div>
           <div className="text-sm">3D View</div>
