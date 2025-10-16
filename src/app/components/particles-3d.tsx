@@ -109,9 +109,50 @@ export function ParticleField({
 }
 
 export function HoloAvatar({ className }: { className?: string }) {
+  const [mounted, setMounted] = React.useState(false);
+  const [webglError, setWebglError] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className={cn("relative flex items-center justify-center bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-3xl", className)}>
+        <div className="text-cyan-300/50 text-sm">Loading...</div>
+      </div>
+    );
+  }
+
+  if (webglError) {
+    return (
+      <div className={cn("relative flex items-center justify-center bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-3xl", className)}>
+        <div className="text-cyan-300 text-center p-8">
+          <div className="text-6xl mb-2">⚡</div>
+          <div className="text-sm">3D View</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("relative", className)}>
-      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 5], fov: 55 }}>
+      <Canvas
+        dpr={[1, 2]}
+        camera={{ position: [0, 0, 5], fov: 55 }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+          preserveDrawingBuffer: false,
+          failIfMajorPerformanceCaveat: false,
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0); // transparent
+        }}
+        onError={() => setWebglError(true)}
+        style={{ background: "transparent" }}
+      >
         <ambientLight intensity={0.7} />
         <pointLight position={[6, 4, 6]} intensity={1} color={"#60a5fa"} />
         <group>
@@ -171,6 +212,13 @@ export function SkillOrb({
   logos?: string[];
   size?: number; // uniform scale factor for orb + logos
 }) {
+  const [mounted, setMounted] = React.useState(false);
+  const [webglError, setWebglError] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const computedAccent = useMemo(() => {
     // If explicit accent provided, honor it
     if (accent) return accent;
@@ -188,9 +236,63 @@ export function SkillOrb({
     if (key.includes("genai") || key.includes("ai")) return "#a855f7";
     return "#22d3ee";
   }, [accent, logos, label]);
+
+  if (!mounted) {
+    return (
+      <div className="group relative aspect-square w-full rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur-sm transition hover:bg-white/10">
+        <div className="flex h-full items-center justify-center">
+          <div
+            className="h-16 w-16 rounded-full animate-pulse"
+            style={{ backgroundColor: `${computedAccent}20` }}
+          />
+        </div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-xs font-medium text-cyan-100 drop-shadow-lg">
+          {label}
+        </div>
+      </div>
+    );
+  }
+
+  if (webglError) {
+    return (
+      <div className="group relative aspect-square w-full rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur-sm transition hover:bg-white/10">
+        <div className="flex h-full items-center justify-center">
+          <div
+            className="h-16 w-16 rounded-full flex items-center justify-center text-2xl font-bold"
+            style={{
+              backgroundColor: `${computedAccent}20`,
+              color: computedAccent,
+              border: `2px solid ${computedAccent}40`,
+            }}
+          >
+            {label.slice(0, 2).toUpperCase()}
+          </div>
+        </div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-xs font-medium text-cyan-100 drop-shadow-lg">
+          {label}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="group relative aspect-square w-full rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur-sm transition hover:bg-white/10">
-      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 3.2], fov: 40 }}>
+      <Canvas
+        dpr={[1, 2]}
+        camera={{ position: [0, 0, 3.2], fov: 40 }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+          preserveDrawingBuffer: false,
+          failIfMajorPerformanceCaveat: false,
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0); // transparent
+        }}
+        onError={() => setWebglError(true)}
+        style={{ background: "transparent" }}
+      >
         <ambientLight intensity={0.6} />
         <pointLight
           position={[3, 3, 3]}
