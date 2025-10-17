@@ -26,8 +26,21 @@ function checkWebGLSupport(): boolean {
   }
 }
 
+// Detect if running on mobile device
+function isMobileDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    ) || window.innerWidth < 768
+  );
+}
+
 let webglContextCount = 0;
-const MAX_WEBGL_CONTEXTS = 12; // Increased to support 1 hero + 10 skill orbs + 1 buffer
+// Mobile devices: Only hero orb uses WebGL (1 context), skill orbs show icon fallback
+// Desktop: All orbs use WebGL (1 hero + 10 skills = 11 contexts, use 12 for buffer)
+const MAX_WEBGL_CONTEXTS =
+  typeof window !== "undefined" && isMobileDevice() ? 1 : 12;
 
 function canCreateWebGLContext(): boolean {
   return checkWebGLSupport() && webglContextCount < MAX_WEBGL_CONTEXTS;
@@ -171,13 +184,26 @@ export function HoloAvatar({ className }: { className?: string }) {
     return (
       <div
         className={cn(
-          "relative flex items-center justify-center bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-3xl",
+          "relative flex flex-col items-center justify-center bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-fuchsia-500/10 rounded-3xl border border-cyan-500/20 shadow-lg",
           className
         )}
       >
-        <div className="text-cyan-300 text-center p-8">
-          <div className="text-6xl mb-2">⚡</div>
-          <div className="text-sm">3D View</div>
+        <div className="text-center p-8 space-y-4">
+          {/* Animated lightning icon with glow */}
+          <div
+            className="text-7xl mb-3 animate-pulse"
+            style={{
+              filter: "drop-shadow(0 0 20px rgba(34, 211, 238, 0.6))",
+            }}
+          >
+            ⚡
+          </div>
+          {/* Subtitle */}
+          <div className="text-cyan-300 text-sm font-medium tracking-wide">
+            Portfolio Avatar
+          </div>
+          {/* Decorative gradient line */}
+          <div className="w-24 h-1 mx-auto bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50 rounded-full" />
         </div>
       </div>
     );
@@ -186,12 +212,12 @@ export function HoloAvatar({ className }: { className?: string }) {
   return (
     <div className={cn("relative", className)}>
       <Canvas
-        dpr={[1, 2]}
+        dpr={[1, 2]} // High quality on both mobile and desktop
         camera={{ position: [0, 0, 5], fov: 55 }}
         gl={{
-          antialias: true,
+          antialias: true, // High quality antialiasing
           alpha: true,
-          powerPreference: "high-performance",
+          powerPreference: "high-performance", // Max performance
           preserveDrawingBuffer: false,
           failIfMajorPerformanceCaveat: false,
         }}
@@ -208,7 +234,7 @@ export function HoloAvatar({ className }: { className?: string }) {
           <Stars
             radius={20}
             depth={40}
-            count={2000}
+            count={2000} // Full star count for both mobile and desktop
             factor={2}
             saturation={0}
             fade
@@ -266,7 +292,9 @@ export function SkillOrb({
 
   React.useEffect(() => {
     setMounted(true);
-    const hasSupport = canCreateWebGLContext();
+    // On mobile, always use fallback (icons only). On desktop, use WebGL if available
+    const isMobile = isMobileDevice();
+    const hasSupport = !isMobile && canCreateWebGLContext();
     setCanUseWebGL(hasSupport);
 
     if (hasSupport) {
@@ -312,36 +340,53 @@ export function SkillOrb({
   }
 
   if (!canUseWebGL || webglError) {
-    // Fallback UI when WebGL is not available or errored
+    // Mobile fallback UI - circular design with glowing borders matching screenshot
     return (
-      <div className="group relative aspect-square w-full rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur-sm transition hover:bg-white/10">
-        <div className="flex h-full flex-col items-center justify-center gap-2">
-          {logos && logos.length > 0 ? (
-            <div className="flex flex-wrap gap-1 justify-center items-center p-2">
-              {logos.map((logo, idx) => (
-                <img
-                  key={idx}
-                  src={logo}
-                  alt=""
-                  className="w-8 h-8 object-contain"
-                  style={{ filter: `drop-shadow(0 0 4px ${computedAccent})` }}
-                />
-              ))}
-            </div>
-          ) : (
-            <div
-              className="h-16 w-16 rounded-full flex items-center justify-center text-2xl font-bold"
-              style={{
-                backgroundColor: `${computedAccent}20`,
-                color: computedAccent,
-                border: `2px solid ${computedAccent}40`,
-              }}
-            >
-              {label.slice(0, 2).toUpperCase()}
-            </div>
-          )}
+      <div className="group relative flex flex-col items-center justify-center gap-3">
+        {/* Circular container with glow effect */}
+        <div
+          className="relative flex items-center justify-center rounded-full aspect-square w-full max-w-[100px]"
+          style={{
+            background: `radial-gradient(circle at center, ${computedAccent}15 0%, transparent 70%)`,
+            boxShadow: `0 0 40px ${computedAccent}60, 0 0 80px ${computedAccent}30, inset 0 0 40px ${computedAccent}10`,
+          }}
+        >
+          {/* Glowing border ring */}
+          <div
+            className="absolute inset-0 rounded-full border-2"
+            style={{
+              borderColor: computedAccent,
+              boxShadow: `0 0 20px ${computedAccent}80, inset 0 0 20px ${computedAccent}40`,
+            }}
+          />
+
+          {/* Inner dark circle */}
+          <div className="absolute inset-[8px] rounded-full bg-gradient-to-br from-slate-900/90 to-slate-950/95 backdrop-blur-sm" />
+
+          {/* Logo container */}
+          <div className="relative z-10 flex items-center justify-center w-full h-full p-8">
+            {logos && logos.length > 0 ? (
+              <img
+                src={logos[0]}
+                alt={label}
+                className="w-full h-full object-contain"
+                style={{
+                  filter: `drop-shadow(0 0 8px ${computedAccent}60)`,
+                }}
+              />
+            ) : (
+              <div
+                className="text-4xl font-bold"
+                style={{ color: computedAccent }}
+              >
+                {label.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+          </div>
         </div>
-        <div className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-xs font-medium text-cyan-100 drop-shadow-lg">
+
+        {/* Label below */}
+        <div className="text-center text-base font-semibold text-white drop-shadow-lg">
           {label}
         </div>
       </div>
@@ -351,12 +396,12 @@ export function SkillOrb({
   return (
     <div className="group relative aspect-square w-full rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur-sm transition hover:bg-white/10">
       <Canvas
-        dpr={[1, 2]}
+        dpr={[1, 2]} // High quality on both mobile and desktop
         camera={{ position: [0, 0, 3.2], fov: 40 }}
         gl={{
-          antialias: true,
+          antialias: true, // High quality antialiasing
           alpha: true,
-          powerPreference: "high-performance",
+          powerPreference: "high-performance", // Max performance
           preserveDrawingBuffer: false,
           failIfMajorPerformanceCaveat: false,
         }}
