@@ -13,6 +13,34 @@ const ORB_ROT_SPEED = 1.2;
 const GLOBAL_TIME_ORIGIN =
   typeof performance !== "undefined" ? performance.now() : 0;
 
+// WebGL detection and context management
+function checkWebGLSupport(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const canvas = document.createElement("canvas");
+    const gl =
+      canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    return !!gl;
+  } catch (e) {
+    return false;
+  }
+}
+
+let webglContextCount = 0;
+const MAX_WEBGL_CONTEXTS = 6; // Conservative limit for mobile devices
+
+function canCreateWebGLContext(): boolean {
+  return checkWebGLSupport() && webglContextCount < MAX_WEBGL_CONTEXTS;
+}
+
+function incrementWebGLContextCount() {
+  webglContextCount++;
+}
+
+function decrementWebGLContextCount() {
+  webglContextCount = Math.max(0, webglContextCount - 1);
+}
+
 export type ParticleFieldProps = {
   className?: string;
   density?: number; // number of particles per 10,000px^2 of viewport; defaults to 0.6
@@ -110,10 +138,20 @@ export function ParticleField({
 
 export function HoloAvatar({ className }: { className?: string }) {
   const [mounted, setMounted] = React.useState(false);
+  const [canUseWebGL, setCanUseWebGL] = React.useState(false);
   const [webglError, setWebglError] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
+    const hasSupport = canCreateWebGLContext();
+    setCanUseWebGL(hasSupport);
+
+    if (hasSupport) {
+      incrementWebGLContextCount();
+      return () => {
+        decrementWebGLContextCount();
+      };
+    }
   }, []);
 
   if (!mounted) {
@@ -129,7 +167,7 @@ export function HoloAvatar({ className }: { className?: string }) {
     );
   }
 
-  if (webglError) {
+  if (!canUseWebGL || webglError) {
     return (
       <div
         className={cn(
@@ -223,10 +261,20 @@ export function SkillOrb({
   size?: number; // uniform scale factor for orb + logos
 }) {
   const [mounted, setMounted] = React.useState(false);
+  const [canUseWebGL, setCanUseWebGL] = React.useState(false);
   const [webglError, setWebglError] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
+    const hasSupport = canCreateWebGLContext();
+    setCanUseWebGL(hasSupport);
+
+    if (hasSupport) {
+      incrementWebGLContextCount();
+      return () => {
+        decrementWebGLContextCount();
+      };
+    }
   }, []);
 
   const computedAccent = useMemo(() => {
@@ -263,20 +311,35 @@ export function SkillOrb({
     );
   }
 
-  if (webglError) {
+  if (!canUseWebGL || webglError) {
+    // Fallback UI when WebGL is not available or errored
     return (
       <div className="group relative aspect-square w-full rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur-sm transition hover:bg-white/10">
-        <div className="flex h-full items-center justify-center">
-          <div
-            className="h-16 w-16 rounded-full flex items-center justify-center text-2xl font-bold"
-            style={{
-              backgroundColor: `${computedAccent}20`,
-              color: computedAccent,
-              border: `2px solid ${computedAccent}40`,
-            }}
-          >
-            {label.slice(0, 2).toUpperCase()}
-          </div>
+        <div className="flex h-full flex-col items-center justify-center gap-2">
+          {logos && logos.length > 0 ? (
+            <div className="flex flex-wrap gap-1 justify-center items-center p-2">
+              {logos.map((logo, idx) => (
+                <img
+                  key={idx}
+                  src={logo}
+                  alt=""
+                  className="w-8 h-8 object-contain"
+                  style={{ filter: `drop-shadow(0 0 4px ${computedAccent})` }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div
+              className="h-16 w-16 rounded-full flex items-center justify-center text-2xl font-bold"
+              style={{
+                backgroundColor: `${computedAccent}20`,
+                color: computedAccent,
+                border: `2px solid ${computedAccent}40`,
+              }}
+            >
+              {label.slice(0, 2).toUpperCase()}
+            </div>
+          )}
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-xs font-medium text-cyan-100 drop-shadow-lg">
           {label}
@@ -343,6 +406,8 @@ function LogoBillboard({
 
   React.useEffect(() => {
     let mounted = true;
+    let loadTimeout: NodeJS.Timeout;
+
     const loader = new THREE.TextureLoader();
     // allow same-origin loads and potential CDN with CORS
     // @ts-ignore - setCrossOrigin exists at runtime
@@ -350,18 +415,38 @@ function LogoBillboard({
       // anonymous helps avoid tainting if served with CORS headers
       (loader as any).setCrossOrigin("anonymous");
     }
+
+    // Set a timeout for texture loading (mobile networks can be slow)
+    loadTimeout = setTimeout(() => {
+      if (mounted && !texture) {
+        setFailed(true);
+      }
+    }, 3000); // 3 second timeout
+
     loader.load(
       resolvedSrc,
       (tex) => {
-        if (mounted) setTexture(tex);
+        clearTimeout(loadTimeout);
+        if (mounted) {
+          tex.minFilter = THREE.LinearFilter; // Better for mobile performance
+          tex.magFilter = THREE.LinearFilter;
+          tex.generateMipmaps = false; // Save memory on mobile
+          setTexture(tex);
+        }
       },
       undefined,
-      () => {
+      (error) => {
+        clearTimeout(loadTimeout);
         if (mounted) setFailed(true);
       }
     );
+
     return () => {
       mounted = false;
+      clearTimeout(loadTimeout);
+      if (texture) {
+        texture.dispose();
+      }
     };
   }, [resolvedSrc]);
 
