@@ -19,6 +19,7 @@ export interface ProjectEntry {
   title: string;
   description: string;
   tags: string[];
+  image?: string; // Project thumbnail/image URL
   link?: string;
   date?: string; // month/year
 }
@@ -65,10 +66,10 @@ export const portfolio: PortfolioData = {
     "Versatile web developer with hands‑on experience building full‑stack apps, SaaS tooling and AI‑driven platforms using React, Next.js, Node.js and modern databases. Comfortable wiring responsive UI/UX, authentication, scalable APIs and third‑party integrations. Driven by innovation, teamwork and solving real user problems.",
   resumeFile: "/Anuj_Resume_09-25.pdf", // Place your real PDF at public/Anuj_Resume_09-25.pdf
   social: {
-    github: "#", // TODO: add GitHub profile URL
-    linkedin: "#", // TODO: add LinkedIn profile URL
+    github: "https://github.com/Anuj-K15",
+    linkedin: "https://www.linkedin.com/in/anuj-karambalkar/",
     email: "anujkarambalkar1504@gmail.com",
-    website: "#",
+    website: "https://anujkarambalkar.me",
   },
   skills: [
     {
@@ -151,6 +152,7 @@ export const portfolio: PortfolioData = {
         "Inngest",
         "Clerk",
       ],
+      image: "/thumbnails/KryftAI.png",
       link: "https://www.kryft.app/",
     },
     {
@@ -167,6 +169,7 @@ export const portfolio: PortfolioData = {
         "Cloudinary",
         "Leaflet",
       ],
+      image: "/thumbnails/Chalostay.png",
       link: "https://chalostay.vercel.app/",
     },
   ],
