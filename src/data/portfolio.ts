@@ -151,7 +151,7 @@ export const portfolio: PortfolioData = {
         "Inngest",
         "Clerk",
       ],
-      link: "#",
+      link: "https://www.kryft.app/",
     },
     {
       title: "ChaloStay: Vacation Rental Platform",
@@ -167,7 +167,7 @@ export const portfolio: PortfolioData = {
         "Cloudinary",
         "Leaflet",
       ],
-      link: "#",
+      link: "https://chalostay.vercel.app/",
     },
   ],
   education: [
