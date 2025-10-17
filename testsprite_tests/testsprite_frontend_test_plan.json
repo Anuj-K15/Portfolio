@@ -1,0 +1,441 @@
+[
+  {
+    "id": "TC001",
+    "title": "Verify 3D Hero Section renders correctly on desktop devices",
+    "description": "Check that the 3D holographic torus knot avatar is rendered using Three.js WebGL on desktop browsers with smooth animation and no white canvases.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the homepage on a desktop browser with WebGL support enabled."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the 3D hero avatar is visible, animated, and interactive with no rendering glitches or white canvas issues."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Fallback UI displays properly for 3D Hero Section on mobile devices lacking WebGL",
+    "description": "Ensure the fallback avatar or HTML/CSS interface is displayed on mobile devices where WebGL context is not available or limited.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate or open the homepage on a mobile device with WebGL disabled or unavailable."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that a fallback UI is shown properly in place of the 3D canvas, with no blank or white canvas visible."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Mobile WebGL context management limits to maximum 6 contexts",
+    "description": "Test that the system enforces a limit of 6 simultaneous WebGL contexts on mobile and automatically frees unused contexts.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load multiple WebGL components (particles, skill orbs, etc.) on a mobile device."
+      },
+      {
+        "type": "assertion",
+        "description": "Count active WebGL contexts and verify the number does not exceed 6."
+      },
+      {
+        "type": "action",
+        "description": "Navigate away from or hide some WebGL sections to trigger cleanup."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that unused WebGL contexts are released properly and fallback UI appears if contexts are exhausted."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "3D Skill Orbs render with synchronized rotation and orbiting logos",
+    "description": "Validate the interactive 3D Skill Orbs display technology logos orbiting correctly around the icosahedron geometry with texture loading and rotation synchronization.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Skills section on desktop and mobile devices with WebGL enabled."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that 3D skill orbs rotate smoothly, logos orbit synchronously, and textures load with no missing or flickering elements."
+      },
+      {
+        "type": "assertion",
+        "description": "On mobile devices exceeding WebGL context limits, confirm fallback UI for 3D skill orbs is displayed correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Texture loading respects timeout and fallback mechanism",
+    "description": "Test that 3-second texture loading timeout triggers HTML img fallback on failure and that memory is cleaned up after texture load or failure.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate delayed texture loading exceeding 3 seconds on skill orb logos."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that fallback HTML image replaces the failed WebGL texture for each orbiting logo."
+      },
+      {
+        "type": "assertion",
+        "description": "Check browser memory usage and verify proper cleanup of failed texture resources."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "LeetCode statistics fetch successfully and update UI with count-up animation",
+    "description": "Verify that the app fetches real-time coding stats using GraphQL API, caches with SWR, and animates numbers with easing count-up transitions.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load the LeetCode statistics section on the portfolio."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the data is fetched from the API and displayed correctly (total solved, difficulty breakdown)."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that numeric values animate smoothly from previous to new values using count-up animation."
+      },
+      {
+        "type": "action",
+        "description": "Trigger data refresh and verify animations update accordingly."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Server-side API route proxy handles caching and normalizes data",
+    "description": "Ensure the API route proxies requests properly to LeetCode GraphQL, normalizes responses, caches server-side for 1 hour, and handles errors gracefully.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send requests directly to the server-side LeetCode API proxy route."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that the response matches normalized data structure with caching headers as expected."
+      },
+      {
+        "type": "action",
+        "description": "Simulate API failure or timeout from LeetCode and check fallback or error response behavior."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the route responds with appropriate error messages without crashing the app."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Lazy loading portfolio sections triggers correctly on scroll",
+    "description": "Test that portfolio sections lazy-load only when scrolled into viewport, triggering fade-in animations and optionally rendering placeholders before load.",
+    "category": "performance",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load the portfolio homepage and observe initial content load."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that below-the-fold sections are not rendered initially."
+      },
+      {
+        "type": "action",
+        "description": "Scroll down to trigger IntersectionObserver for each section."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that corresponding sections fade in smoothly and render content only after scrolled into view."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Sticky Navigation Bar works with smooth scroll on all screen sizes",
+    "description": "Verify that the sticky navbar remains visible on scrolling and clicking navigation items smoothly scrolls to respective sections on mobile, tablet, and desktop.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the site on various devices and viewport widths."
+      },
+      {
+        "type": "action",
+        "description": "Scroll down through the page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify navbar sticks to top and remains accessible."
+      },
+      {
+        "type": "action",
+        "description": "Click each navigation link."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure smooth scroll animation to each target section completes correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Portfolio Project Showcase displays and links work correctly",
+    "description": "Check project cards show images, descriptions, tech tags, and that demo and GitHub links open in new tabs with correct URLs.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Projects section."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify each project card contains an image, description, and tech tags."
+      },
+      {
+        "type": "action",
+        "description": "Click each demo and GitHub link on project cards."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm links open in new browser tabs and lead to correct pages."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Experience Timeline renders chronological work history with logos and detail",
+    "description": "Validate that the timeline lists all experience entries in chronological order with company logos, roles, and detailed descriptions formatted properly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Experience section."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all work history entries appear ordered by date with consistent styling."
+      },
+      {
+        "type": "assertion",
+        "description": "Check each entry contains a company logo, role title, duration, and description text."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Contact Form validation enforces required fields and email format",
+    "description": "Test the contact form enforcing required inputs using React Hook Form and Zod schemas, showing real-time validation feedback and handling errors.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to Contact section and submit empty form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation errors appear for all required fields."
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid email format and attempt to submit."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm error message shows email format is invalid."
+      },
+      {
+        "type": "action",
+        "description": "Fill valid values for all fields and submit."
+      },
+      {
+        "type": "assertion",
+        "description": "Check form submits successfully and displays success feedback."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Responsive design adapts correctly across breakpoints 320px to 2560px",
+    "description": "Verify the portfolio layouts adapt fluidly on various device widths including mobile, tablet, and desktop without layout breaking or overflow.",
+    "category": "ui",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Resize browser or test on devices with widths 320px, 480px, 768px, 1024px, 1440px, 1920px, and 2560px."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm all page elements reflow correctly, remain readable, and no horizontal scrollbars appear."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure navigation bar, hero section, project cards, and other UI components adapt to each viewport."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Cross-browser compatibility on Chrome, Safari, Firefox, and mobile browsers",
+    "description": "Ensure consistent rendering, functionality, and user experience on latest stable versions of major desktop browsers and mobile browsers.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the portfolio site on latest Chrome, Safari, and Firefox browsers on desktop."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all key features (3D sections, animations, navigation, forms) work as expected."
+      },
+      {
+        "type": "action",
+        "description": "Repeat tests on mobile devices using default browsers (iOS Safari, Chrome Android)."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm no visual or functional regression exists across browsers."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Accessibility audit passes WCAG AA with keyboard navigation and ARIA labels",
+    "description": "Verify that all interactive UI elements have appropriate ARIA labels, keyboard focus states, alt text for images, and color contrast meets WCAG AA standards.",
+    "category": "accessibility",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate through the site using only keyboard (Tab, Shift+Tab, Enter, Space)."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that all interactive elements receive focus in logical order and are operable by keyboard."
+      },
+      {
+        "type": "action",
+        "description": "Use accessibility testing tools to scan the site."
+      },
+      {
+        "type": "assertion",
+        "description": "Assert no critical issues regarding ARIA roles, labels, contrast ratio, or alt text."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Performance metrics meet targets for initial page load and interaction timings",
+    "description": "Measure performance metrics such as initial page load under 3 seconds, First Contentful Paint (FCP) under 1.8s, Largest Contentful Paint (LCP) under 2.5s, and Time to Interactive (TTI) under 3.5s on desktop and mobile network conditions.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Run performance audit tools (Lighthouse or WebPageTest) on homepage using throttled network and CPU."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all target metrics (load time, FCP, LCP, TTI) meet specified thresholds."
+      },
+      {
+        "type": "action",
+        "description": "Repeat test on mobile devices with typical 3G/4G network."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm performance targets are consistently met."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "UI Component Library elements render consistently with Radix UI and Tailwind styling",
+    "description": "Validate that buttons, cards, progress bars, badges, inputs, textareas, labels, tooltips, and separators appear visually consistent and behave correctly across browsers and devices.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to UI component showcase or interact with components within portfolio sections."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify visual consistency of components with approved style guide and that components respond properly to user interactions (hover, focus, click)."
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Custom 3D particle background renders smoothly without performance degradation",
+    "description": "Check the animated 3D particle field background using Three.js point clouds renders fluidly on supported devices and does not cause UI sluggishness or crashes.",
+    "category": "performance",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open homepage on desktop and mobile devices with WebGL enabled."
+      },
+      {
+        "type": "assertion",
+        "description": "Observe the particle background animation for smoothness and responsiveness."
+      },
+      {
+        "type": "action",
+        "description": "Use developer tools to monitor CPU/GPU usage."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm background animations do not cause frame drops or excessive resource consumption."
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Gradient and neon effects render correctly and adapt to theme",
+    "description": "Validate that custom gradient backgrounds, neon glow, and blur overlays render correctly to achieve the cyberpunk aesthetic across all supported viewports without visual artifacts.",
+    "category": "ui",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate through portfolio sections on multiple devices and screen resolutions."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the gradient backgrounds and neon effects appear as designed, remain visually consistent, and do not interfere with readability."
+      }
+    ]
+  }
+]

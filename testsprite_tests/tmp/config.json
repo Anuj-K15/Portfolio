@@ -1,0 +1,17 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000",
+  "loginUser": "test@example.com",
+  "loginPassword": "your-test-password",
+  "executionArgs": {
+    "projectName": "kryft portfolio",
+    "projectPath": "c:\\Users\\anujk\\Desktop\\kryft portfolio",
+    "testIds": [],
+    "additionalInstruction": "Focus on testing: 1) Mobile WebGL rendering (hero orb and skill orbs), 2) Lazy loading sections, 3) LeetCode API integration, 4) Responsive design on mobile/tablet/desktop, 5) Page load performance. Verify no white canvases appear on mobile viewports.",
+    "envs": {
+      "API_KEY": "sk-user-lyxBbopwFMlg3-AFQxnsrCMfJJlxig2GZZy-ezw03ZbqjSoIGq09NIGWNl-RbouHYF6Sb3CKsxWMazuKDVhynW6xyv7Y8Tzl-QM2HOpgNStGaOGP2FWY-kFluGdMAFj2WYE"
+    }
+  }
+}

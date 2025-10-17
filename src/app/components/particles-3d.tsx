@@ -27,7 +27,7 @@ function checkWebGLSupport(): boolean {
 }
 
 let webglContextCount = 0;
-const MAX_WEBGL_CONTEXTS = 6; // Conservative limit for mobile devices
+const MAX_WEBGL_CONTEXTS = 12; // Increased to support 1 hero + 10 skill orbs + 1 buffer
 
 function canCreateWebGLContext(): boolean {
   return checkWebGLSupport() && webglContextCount < MAX_WEBGL_CONTEXTS;

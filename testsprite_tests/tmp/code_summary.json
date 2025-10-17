@@ -1,0 +1,131 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "React 19",
+    "Next.js 15.5.2",
+    "Tailwind CSS",
+    "Three.js",
+    "@react-three/fiber",
+    "@react-three/drei",
+    "Radix UI",
+    "SWR",
+    "Recharts",
+    "Framer Motion",
+    "Zod",
+    "React Hook Form"
+  ],
+  "features": [
+    {
+      "name": "Hero Section with 3D Avatar",
+      "description": "Animated hero section featuring a 3D holographic torus knot avatar using Three.js WebGL, with responsive design and fallback UI for mobile devices. Includes WebGL context management to prevent mobile rendering issues.",
+      "files": ["src/app/page.tsx", "src/app/components/particles-3d.tsx"]
+    },
+    {
+      "name": "Mobile WebGL Context Management",
+      "description": "Smart WebGL context tracking and limiting system (max 6 contexts on mobile) to prevent white canvas issues on mobile devices. Includes automatic cleanup and graceful fallback to HTML/CSS when WebGL unavailable.",
+      "files": ["src/app/components/particles-3d.tsx"]
+    },
+    {
+      "name": "3D Skill Orbs",
+      "description": "Interactive 3D skill visualization using icosahedron geometry with orbiting tech logo billboards. Features synchronized rotation, texture loading with timeouts, and HTML fallback UI when WebGL context limit is reached.",
+      "files": ["src/app/components/particles-3d.tsx"]
+    },
+    {
+      "name": "LeetCode Statistics Integration",
+      "description": "Real-time LeetCode profile statistics fetched from official GraphQL API with count-up animations, donut progress chart, and difficulty breakdown (Easy/Medium/Hard). Uses SWR for client-side data fetching with caching.",
+      "files": [
+        "src/app/components/leetcode-section.tsx",
+        "src/app/components/leetcode-section-lazy.tsx",
+        "src/hooks/use-leetcode.ts",
+        "src/app/api/leetcode/route.ts"
+      ]
+    },
+    {
+      "name": "Count-Up Number Animations",
+      "description": "Smooth number count-up animations with easing for LeetCode stats display, animating from previous values to new values on data updates.",
+      "files": ["src/components/ui/count-up-number.tsx"]
+    },
+    {
+      "name": "Lazy Loading Sections",
+      "description": "Performance optimization using IntersectionObserver to lazy-load sections only when scrolled into viewport. Features configurable threshold, rootMargin, fade-in animations, and optional placeholders.",
+      "files": [
+        "src/components/utils/lazy-section.tsx",
+        "src/app/components/leetcode-section-lazy.tsx"
+      ]
+    },
+    {
+      "name": "Navigation Bar",
+      "description": "Sticky navigation header with smooth scroll-to-section functionality and responsive design.",
+      "files": ["src/app/components/navbar.tsx"]
+    },
+    {
+      "name": "Project Showcase",
+      "description": "Portfolio project cards with images, descriptions, tech stack tags, and links to live demos and GitHub repositories.",
+      "files": ["src/app/components/project-card.tsx", "src/app/page.tsx"]
+    },
+    {
+      "name": "Experience Timeline",
+      "description": "Professional experience timeline component displaying work history, roles, companies, and achievements in chronological order.",
+      "files": ["src/app/components/experience-timeline.tsx"]
+    },
+    {
+      "name": "Contact Form",
+      "description": "Contact form with validation using React Hook Form and Zod schema validation. Includes name, email, and message fields.",
+      "files": ["src/app/components/contact-form.tsx"]
+    },
+    {
+      "name": "Responsive Design System",
+      "description": "Mobile-first responsive design with Tailwind CSS, supporting viewports from 320px to 2560px. Includes breakpoints for mobile, tablet, and desktop layouts.",
+      "files": [
+        "src/app/globals.css",
+        "src/app/page.tsx",
+        "src/hooks/use-mobile.ts"
+      ]
+    },
+    {
+      "name": "UI Component Library",
+      "description": "Comprehensive UI component library built with Radix UI primitives and styled with Tailwind CSS. Includes buttons, cards, progress bars, tooltips, dialogs, forms, and more.",
+      "files": [
+        "src/components/ui/button.tsx",
+        "src/components/ui/card.tsx",
+        "src/components/ui/progress.tsx",
+        "src/components/ui/badge.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/textarea.tsx",
+        "src/components/ui/label.tsx",
+        "src/components/ui/tooltip.tsx",
+        "src/components/ui/separator.tsx"
+      ]
+    },
+    {
+      "name": "Section Headers",
+      "description": "Reusable section header component with icon support and consistent styling across all portfolio sections.",
+      "files": ["src/app/components/section-header.tsx"]
+    },
+    {
+      "name": "Particle Background",
+      "description": "Animated 3D particle field background using Three.js point clouds for visual depth and atmosphere.",
+      "files": ["src/app/components/particles-3d.tsx"]
+    },
+    {
+      "name": "Texture Loading with Fallbacks",
+      "description": "Advanced texture loading system for 3D logo billboards with 3-second timeout, mobile-optimized filtering (no mipmaps), proper memory cleanup, and HTML img fallback for failed loads.",
+      "files": ["src/app/components/particles-3d.tsx"]
+    },
+    {
+      "name": "API Route - LeetCode Proxy",
+      "description": "Server-side API route that proxies requests to LeetCode GraphQL API, normalizes response data, and implements 1-hour server-side caching for performance.",
+      "files": ["src/app/api/leetcode/route.ts"]
+    },
+    {
+      "name": "Portfolio Data Management",
+      "description": "Centralized portfolio data configuration including personal info, skills, projects, experience, and social links.",
+      "files": ["src/data/portfolio.ts"]
+    },
+    {
+      "name": "Gradient & Neon Effects",
+      "description": "Custom gradient backgrounds, neon glow effects, and blur overlays for modern cyberpunk aesthetic using Tailwind CSS utilities.",
+      "files": ["src/app/page.tsx", "src/app/globals.css"]
+    }
+  ]
+}
